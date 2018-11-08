@@ -18,8 +18,9 @@ UPositionReporter::UPositionReporter()
 void UPositionReporter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("Position reporter reporting for duty on chair"));
+		 
+	FString ObjectName = GetOwner() -> GetName();
+	UE_LOG(LogTemp, Warning, TEXT("Position report for %s"), *ObjectName);
 	
 }
 

@@ -10,3 +10,4 @@ Content/StarterContent/
 # Visual studio Files
 #--------------------
 *.VC.db
+*.ipch

@@ -4,10 +4,11 @@
 */Build
 */DerivedDataCache
 */Intermediate
-*/Saved
+*/Saved/
 Content/StarterContent/
 
 # Visual studio Files
 #--------------------
-*.VC.db
+*.VC.db*
 *.ipch
+

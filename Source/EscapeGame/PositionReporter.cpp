@@ -18,9 +18,14 @@ UPositionReporter::UPositionReporter()
 void UPositionReporter::BeginPlay()
 {
 	Super::BeginPlay();
-		 
+	
+	//GetOwner returns a pointer to the owner object. The -> Enables access of methods and variables via pointers. 
 	FString ObjectName = GetOwner() -> GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Position report for %s"), *ObjectName);
+	FString ObjectPos = GetOwner()->GetActorLocation().ToString();
+		//"X = xxx, Y = yyy, Z = zzz";
+
+	//UE_LOG requires FString to be 'dereferenced' to be used for string format
+	UE_LOG(LogTemp, Warning, TEXT("%s is located at %s"), *ObjectName, *ObjectPos);
 	
 }
 

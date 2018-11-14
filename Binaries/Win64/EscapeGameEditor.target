@@ -16,15 +16,15 @@
 	},
 	"BuildProducts": [
 		{
-			"Path": "$(ProjectDir)/Binaries/Win64/UE4Editor-EscapeGame-2512.dll",
+			"Path": "$(ProjectDir)/Binaries/Win64/UE4Editor-EscapeGame-6896.dll",
 			"Type": "DynamicLibrary"
 		},
 		{
-			"Path": "$(ProjectDir)/Binaries/Win64/UE4Editor-EscapeGame-2512.pdb",
+			"Path": "$(ProjectDir)/Binaries/Win64/UE4Editor-EscapeGame-6896.pdb",
 			"Type": "SymbolFile"
 		},
 		{
-			"Path": "$(ProjectDir)/Intermediate/Build/Win64/UE4Editor/Development/UE4Editor-EscapeGame-2512.lib",
+			"Path": "$(ProjectDir)/Intermediate/Build/Win64/UE4Editor/Development/UE4Editor-EscapeGame-6896.lib",
 			"Type": "ImportLibrary"
 		},
 		{

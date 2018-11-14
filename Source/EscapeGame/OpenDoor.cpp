@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+
 #include "OpenDoor.h"
-#include "Classes/GameFramework/Actor.h"
+
 
 
 // Sets default values for this component's properties
@@ -20,15 +21,20 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
+}
+
+//sets rotation of door to be open. Also prints to log.
+void UOpenDoor::OpenDoor()
+{
 	AActor* Owner = GetOwner();
 	FString RotatorString = Owner->GetActorRotation().ToString();
 	FString OwnerName = Owner->GetName();
 
 	UE_LOG(LogTemp, Warning, TEXT("%s has rotation %s"), *OwnerName, *RotatorString);
 
-	FRotator NewRotation = FRotator(0.0f, 90.0f, 0.0f);
+	//Only rotating the door around the z-axis
+	FRotator NewRotation = FRotator(0.0f, DoorRotation, 0.0f);
 	Owner->SetActorRotation(NewRotation);
-
 }
 
 
@@ -37,6 +43,9 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if (PressurePlate && PressurePlate->IsOverlappingActor(PressureTriggerActor))
+	{
+		OpenDoor();
+	}
 }
 

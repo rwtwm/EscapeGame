@@ -28,9 +28,12 @@ private:
 	APlayerController* ParentPlayerController;
 	FRotator PlayerRotation;
 	FVector PlayerLocation;
+	FVector ReachEnd;
 
 	FString RotationReport, LocationReport;
 
+	//Length of grabber 'arms'
+	float Reach = 100.0f;
 		
 	
 };

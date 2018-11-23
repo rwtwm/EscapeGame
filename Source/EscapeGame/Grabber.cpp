@@ -3,6 +3,7 @@
 
 #include "Grabber.h"
 #include "Engine/World.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -33,11 +34,19 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	
 	ParentPlayerController->GetPlayerViewPoint(PlayerLocation, PlayerRotation);
 	
-	LocationReport = PlayerLocation.ToString();
+	//Debug printing for location and rotation
+	/*LocationReport = PlayerLocation.ToString();
 	RotationReport = PlayerRotation.ToString();
+	UE_LOG(LogTemp, Warning, TEXT("Player Position: %s.  Player Rotation: %s"), *LocationReport, *RotationReport);*/
 	
+	ReachEnd = PlayerLocation + PlayerRotation.Vector() * Reach;
 
-	UE_LOG(LogTemp, Warning, TEXT("Player Position: %s.  Player Rotation: %s"), *LocationReport, *RotationReport);
-	// ...
+	DrawDebugLine(
+		GetWorld(),
+		PlayerLocation,
+		ReachEnd,
+		FColor(255, 0, 0)
+	); //Function call across multiple lines
+	
 }
 

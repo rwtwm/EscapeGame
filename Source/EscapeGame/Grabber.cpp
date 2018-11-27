@@ -24,7 +24,22 @@ void UGrabber::BeginPlay()
 	// ...
 
 	UE_LOG(LogTemp, Warning, TEXT("Grabber reporting for duty"));
+
+	///find attached physics handle
+	PhysicsHandler = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+
+	//Log Error if physics handle not attached to parent component.
+	if (PhysicsHandler)
+	{
+		//Physics Handler is found
+	} 
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Physics Handler not found for %s"), *(GetOwner()->GetName()));
+	}
+
 }
+
 
 
 // Called every frame
@@ -34,11 +49,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	
 	ParentPlayerController->GetPlayerViewPoint(PlayerLocation, PlayerRotation);
 	
-	//Debug printing for location and rotation
-	/*LocationReport = PlayerLocation.ToString();
-	RotationReport = PlayerRotation.ToString();
-	UE_LOG(LogTemp, Warning, TEXT("Player Position: %s.  Player Rotation: %s"), *LocationReport, *RotationReport);*/
-	
 	ReachEnd = PlayerLocation + PlayerRotation.Vector() * Reach;
 
 	DrawDebugLine(
@@ -47,6 +57,26 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		ReachEnd,
 		FColor(255, 0, 0)
 	); //Function call across multiple lines
+
+
+	FHitResult LineTraceResult = FHitResult();
+	FString HitActorName = "";
+
+	GetWorld()->LineTraceSingleByObjectType(
+		LineTraceResult,
+		PlayerLocation,
+		ReachEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
+		FCollisionQueryParams(FName(), false, GetOwner())
+	);
+
+	if (LineTraceResult.GetActor()) {
+		HitActorName = LineTraceResult.GetActor()->GetName();
+		UE_LOG(LogTemp, Warning, TEXT("LineTrace hit: %s"), *HitActorName);
+	}
+
+	
+
 	
 }
 

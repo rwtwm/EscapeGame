@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Grabber.generated.h"
 
 
@@ -35,5 +35,5 @@ private:
 	//Length of grabber 'arms'
 	float Reach = 100.0f;
 		
-	
+	UPhysicsHandleComponent* PhysicsHandler = nullptr;
 };

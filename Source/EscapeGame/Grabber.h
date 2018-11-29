@@ -37,7 +37,8 @@ private:
 
 	//Length of grabber 'arms'
 	float Reach = 100.0f;
-		
+	
+	//found during begin play
 	UPhysicsHandleComponent* PhysicsHandler = nullptr;
 	UInputComponent* InputComponent = nullptr;
 

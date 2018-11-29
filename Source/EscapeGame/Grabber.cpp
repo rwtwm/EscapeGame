@@ -4,6 +4,7 @@
 #include "Grabber.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+#include "Engine/EngineTypes.h"
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -22,7 +23,7 @@ void UGrabber::BeginPlay()
 	Super::BeginPlay();
 	ParentPlayerController = GetWorld()->GetFirstPlayerController();
 	
-
+	//Initialises pointers for PhysicsHandler and InputCOmponent
 	FindPhysicsHandle();
 	FindInputComponent();
 
@@ -44,6 +45,7 @@ void UGrabber::FindPhysicsHandle()
 	}
 }
 
+//Identifies the input component attached to the player pawn and binds the input actions to funtions. 
 void UGrabber::FindInputComponent()
 {
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
@@ -63,12 +65,28 @@ void UGrabber::FindInputComponent()
 void UGrabber::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"));
-	RunLineTraceForPhysicsBody();
+	
+	//Grab component on physics body
+	FHitResult GrabHitResult = RunLineTraceForPhysicsBody();
+	
+	if (GrabHitResult.GetActor())
+	{
+		UPrimitiveComponent* ComponentToGrab = GrabHitResult.GetComponent();
+				
+		PhysicsHandler->GrabComponentAtLocationWithRotation(
+			ComponentToGrab,
+			NAME_None,
+			GrabHitResult.GetActor()->GetActorLocation(),
+			GrabHitResult.GetActor()->GetActorRotation()
+		);
+		
+	}
 }
 
 void UGrabber::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab released"));
+	PhysicsHandler->ReleaseComponent();
 }
 
 
@@ -76,6 +94,14 @@ void UGrabber::Release()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	
+	if(PhysicsHandler->GrabbedComponent)
+	{
+		ParentPlayerController->GetPlayerViewPoint(PlayerLocation, PlayerRotation);
+		ReachEnd = PlayerLocation + PlayerRotation.Vector() * Reach;
+
+		PhysicsHandler->SetTargetLocation(ReachEnd);
+	}
 	
 			
 }

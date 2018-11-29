@@ -3,6 +3,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Components/InputComponent.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Grabber.generated.h"
 
@@ -43,4 +44,8 @@ private:
 	//Private functions...
 	void FindPhysicsHandle();
 	void FindInputComponent();
+	void Grab();
+	void Release();
+
+	FHitResult RunLineTraceForPhysicsBody();
 };

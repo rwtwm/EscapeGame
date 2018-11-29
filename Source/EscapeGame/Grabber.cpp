@@ -21,9 +21,7 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	ParentPlayerController = GetWorld()->GetFirstPlayerController();
-	// ...
-
-	UE_LOG(LogTemp, Warning, TEXT("Grabber reporting for duty"));
+	
 
 	FindPhysicsHandle();
 	FindInputComponent();
@@ -53,6 +51,8 @@ void UGrabber::FindInputComponent()
 	if (InputComponent) 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("InputComponent present on %s"), *(GetOwner()->GetName()));
+		InputComponent->BindAction(FName("Grab"), IE_Pressed, this, &UGrabber::Grab);
+		InputComponent->BindAction(FName("Grab"), IE_Released, this, &UGrabber::Release);
 	}
 	else
 	{
@@ -60,6 +60,16 @@ void UGrabber::FindInputComponent()
 	}
 }
 
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"));
+	RunLineTraceForPhysicsBody();
+}
+
+void UGrabber::Release()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grab released"));
+}
 
 
 // Called every frame
@@ -67,23 +77,24 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
+			
+}
+
+
+
+FHitResult UGrabber::RunLineTraceForPhysicsBody()
+{
+	//Player location and player rotation are modified by passing them into this function.
 	ParentPlayerController->GetPlayerViewPoint(PlayerLocation, PlayerRotation);
-	
+
 	ReachEnd = PlayerLocation + PlayerRotation.Vector() * Reach;
-
-	DrawDebugLine(
-		GetWorld(),
-		PlayerLocation,
-		ReachEnd,
-		FColor(255, 0, 0)
-	); //Function call across multiple lines
-
 
 	FHitResult LineTraceResult = FHitResult();
 	FString HitActorName = "";
 
+	//Find the first physics body between 'player location' and reach end
 	GetWorld()->LineTraceSingleByObjectType(
-		LineTraceResult,
+		LineTraceResult, //OUT parameter
 		PlayerLocation,
 		ReachEnd,
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
@@ -95,8 +106,8 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		UE_LOG(LogTemp, Warning, TEXT("LineTrace hit: %s"), *HitActorName);
 	}
 
-	
-
-	
+	return LineTraceResult;
 }
+
+
 

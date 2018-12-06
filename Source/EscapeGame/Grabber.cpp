@@ -13,7 +13,6 @@ UGrabber::UGrabber()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 
@@ -29,17 +28,14 @@ void UGrabber::BeginPlay()
 
 }
 
+
 void UGrabber::FindPhysicsHandle()
 {
 	///find attached physics handle
 	PhysicsHandler = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 
 	//Log Error if physics handle not attached to parent component.
-	if (PhysicsHandler)
-	{
-		//Physics Handler is found
-	}
-	else
+	if (!PhysicsHandler)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Physics Handler not found for %s"), *(GetOwner()->GetName()));
 	}
@@ -97,24 +93,13 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	
 	if(PhysicsHandler->GrabbedComponent)
 	{
-		ParentPlayerController->GetPlayerViewPoint(PlayerLocation, PlayerRotation);
-		ReachEnd = PlayerLocation + PlayerRotation.Vector() * Reach;
-
-		PhysicsHandler->SetTargetLocation(ReachEnd);
+		PhysicsHandler->SetTargetLocation(GetReachEnd());
 	}
-	
-			
 }
-
 
 
 FHitResult UGrabber::RunLineTraceForPhysicsBody()
 {
-	//Player location and player rotation are modified by passing them into this function.
-	ParentPlayerController->GetPlayerViewPoint(PlayerLocation, PlayerRotation);
-
-	ReachEnd = PlayerLocation + PlayerRotation.Vector() * Reach;
-
 	FHitResult LineTraceResult = FHitResult();
 	FString HitActorName = "";
 
@@ -122,7 +107,7 @@ FHitResult UGrabber::RunLineTraceForPhysicsBody()
 	GetWorld()->LineTraceSingleByObjectType(
 		LineTraceResult, //OUT parameter
 		PlayerLocation,
-		ReachEnd,
+		GetReachEnd(),
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
 		FCollisionQueryParams(FName(), false, GetOwner())
 	);
@@ -133,6 +118,15 @@ FHitResult UGrabber::RunLineTraceForPhysicsBody()
 	}
 
 	return LineTraceResult;
+}
+
+//Returns the end postion of the grabber 'arms' 
+FVector UGrabber::GetReachEnd()
+{
+	//Player location and player rotation are modified by passing them into this function.
+	ParentPlayerController->GetPlayerViewPoint(PlayerLocation, PlayerRotation);
+	
+	return PlayerLocation + PlayerRotation.Vector() * Reach;
 }
 
 

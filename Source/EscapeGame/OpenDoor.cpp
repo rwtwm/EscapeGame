@@ -47,18 +47,43 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (PressurePlate && PressurePlate->IsOverlappingActor(PressureTriggerActor))
+	if (PressurePlate && GetTotalMassOfActorsOnTrigger() > 40.0f)
 	{
 		OpenDoor();
 		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
-		UE_LOG(LogTemp, Warning, TEXT("DoorOpened"));
+		
+		//UE_LOG(LogTemp, Warning, TEXT("DoorOpened"));
 	}
 
 	if (LastDoorOpenTime > 0.0f && GetWorld()->GetTimeSeconds() - LastDoorOpenTime > DoorCloseDelay)
 	{
 		CloseDoor();
-		UE_LOG(LogTemp, Warning, TEXT("DoorClosed"));
+		//UE_LOG(LogTemp, Warning, TEXT("DoorClosed"));
 	}
 
+	if (PressurePlate)
+	{
+		GetTotalMassOfActorsOnTrigger();
+	}
+
+}
+
+float UOpenDoor::GetTotalMassOfActorsOnTrigger()
+{
+	float TotalMass = 0.0f;
+
+	TArray<AActor*> OverlappingActors;
+	PressurePlate->GetOverlappingActors(OverlappingActors); //OUT parameter
+
+	for (auto OverlappingActor : OverlappingActors)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Actor %s on trigger"), *(OverlappingActor->GetName()));
+		TotalMass += OverlappingActor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+	}
+	
+
+	UE_LOG(LogTemp, Warning, TEXT("Mass on Trigger is %s"), *(FString::SanitizeFloat(TotalMass)));
+
+	return TotalMass;
 }
 

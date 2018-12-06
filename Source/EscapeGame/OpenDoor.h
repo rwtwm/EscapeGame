@@ -4,6 +4,7 @@
 #include "Components/ActorComponent.h"
 #include "GameFramework/Actor.h"
 #include "Engine/TriggerVolume.h"
+#include "Components/PrimitiveComponent.h"
 #include "OpenDoor.generated.h"
 
 
@@ -41,6 +42,7 @@ private:
 	AActor* PressureTriggerActor;
 	AActor* ParentDoor;
 	float LastDoorOpenTime;
+	float GetTotalMassOfActorsOnTrigger();
 
 	
 };

@@ -31,7 +31,7 @@ private:
 	APlayerController* ParentPlayerController;
 	FRotator PlayerRotation;
 	FVector PlayerLocation;
-	FVector ReachEnd;
+	
 
 	FString RotationReport, LocationReport;
 
@@ -49,4 +49,6 @@ private:
 	void Release();
 
 	FHitResult RunLineTraceForPhysicsBody();
+	FVector GetReachEnd();
+	
 };
